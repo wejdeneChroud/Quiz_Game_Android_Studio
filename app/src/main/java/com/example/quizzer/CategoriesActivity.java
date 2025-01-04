@@ -2,6 +2,7 @@ package com.example.quizzer;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -13,11 +14,23 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CategoriesActivity extends AppCompatActivity {
+
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef = database.getReference("https://quizzer-a1f47-default-rtdb.firebaseio.com/");
+
     private RecyclerView recyclerView;
+    private List<CategoryModel> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +40,7 @@ public class CategoriesActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Categories");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Categories");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         recyclerView = findViewById(R.id.rv);
@@ -37,25 +50,28 @@ public class CategoriesActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(layoutManager);
 
-        List<CategoryModel> list = new ArrayList<>();
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-
+        list = new ArrayList<>();
         CategoryAdapter adapter = new CategoryAdapter(list);
         recyclerView.setAdapter(adapter);
+
+
+        myRef.child("Categories").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    CategoryModel category = dataSnapshot1.getValue(CategoryModel.class);
+                    if (category != null) {
+                        list.add(category);
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(CategoriesActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

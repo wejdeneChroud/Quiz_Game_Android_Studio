@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "84425307654",
+    "firebase_url": "https://quizzer-a1f47-default-rtdb.firebaseio.com",
+    "project_id": "quizzer-a1f47",
+    "storage_bucket": "quizzer-a1f47.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:84425307654:android:c4df06ef2bbb2cba143587",
+        "android_client_info": {
+          "package_name": "com.example.quizzer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAH4MEpgOFF3arctC7MCvmJnDZvBAT-vEM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
