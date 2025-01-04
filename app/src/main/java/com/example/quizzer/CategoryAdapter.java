@@ -49,7 +49,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Viewho
 
         public Viewholder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.image_view); // Replace with your actual ID
+            imageView = itemView.findViewById(R.id.image_view);
             title = itemView.findViewById(R.id.title);
         }
 

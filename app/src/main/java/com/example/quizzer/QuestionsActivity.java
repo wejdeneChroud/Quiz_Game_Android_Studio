@@ -1,6 +1,8 @@
 package com.example.quizzer;
 
 import android.animation.Animator;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
@@ -30,6 +32,7 @@ public class QuestionsActivity extends AppCompatActivity {
     private int count = 0;
     private List<QuestionModel> list;
     private int position = 0;
+    private int score = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,25 +61,28 @@ public class QuestionsActivity extends AppCompatActivity {
         list.add(new QuestionModel("Qestion 3","a","b","c","d","c"));
         list.add(new QuestionModel("Qestion 4","a","b","c","d","d"));
         list.add(new QuestionModel("Qestion 5","a","b","c","d","a"));
-        list.add(new QuestionModel("Qestion 6","a","b","c","d","b"));
-        list.add(new QuestionModel("Qestion 7","a","b","c","d","c"));
-        list.add(new QuestionModel("Qestion 8","a","b","c","d","d"));
-        list.add(new QuestionModel("Qestion 9","a","b","c","d","a"));
-        list.add(new QuestionModel("Qestion 10","a","b","c","d","b"));
 
         for (int i = 0; i < 4; i++){
             optionsContainer.getChildAt(i).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    checkAnswer((Button)v);
                 }
             });
         }
 
-
+        playanim(question,0,list.get(position).getQuestion());
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                nextBtn.setEnabled(false);
+                nextBtn.setAlpha(0.7f);
+                enableOption(true);
+                position++;
+                if (position == list.size()) {
+                    //// score activity
+                    return;
+                }
                 count = 0;
                 playanim(question,0, list.get(position).getQuestion());
             }
@@ -88,7 +94,7 @@ public class QuestionsActivity extends AppCompatActivity {
                 .setInterpolator(new DecelerateInterpolator()).setListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(@NonNull Animator animator) {
-                        if (value == 0) {
+                        if (value == 0 && count < 4) {
                             String option = "";
                             if (count == 0){
                                 option = list.get(position).getOptionA();
@@ -106,8 +112,14 @@ public class QuestionsActivity extends AppCompatActivity {
 
                     @Override
                     public void onAnimationEnd(@NonNull Animator animator) {
-                        ((TextView)view).setText(data);
                         if (value == 0) {
+                            try{
+                                ((TextView)view).setText(data);
+                                noIndicator.setText(position+1+"/"+list.size());
+                            }catch (ClassCastException ex){
+                                ((Button)view).setText(data);
+                            }
+                            view.setTag(data);
                             playanim(view,1, data);
                         }
                     }
@@ -123,6 +135,29 @@ public class QuestionsActivity extends AppCompatActivity {
                     }
                 });
 
+    }
+
+    private void checkAnswer(Button selectedOption) {
+        enableOption(false);
+        nextBtn.setEnabled(true);
+        nextBtn.setAlpha(1);
+        if (selectedOption.getText().toString().equals(list.get(position).getCorrectANS())){
+            score++;
+            selectedOption.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4CAF50")));
+        }else{
+            selectedOption.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ff0000")));
+            Button correctOption = (Button) optionsContainer.findViewWithTag(list.get(position).getCorrectANS());
+            correctOption.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4CAF50")));
+        }
+    }
+
+    private void enableOption(boolean enable) {
+        for (int i = 0; i < 4; i++){
+            optionsContainer.getChildAt(i).setEnabled(enable);
+            if (enable) {
+                optionsContainer.getChildAt(i).setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#989898")));
+            }
+        }
     }
 
 }

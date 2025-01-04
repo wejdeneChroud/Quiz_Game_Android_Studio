@@ -41,18 +41,6 @@ public class CategoriesActivity extends AppCompatActivity {
         list.add(new CategoryModel("","Category1"));
         list.add(new CategoryModel("","Category1"));
         list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
 
         CategoryAdapter adapter = new CategoryAdapter(list);
         recyclerView.setAdapter(adapter);
